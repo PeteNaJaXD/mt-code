@@ -7,9 +7,10 @@ from textual.message import Message
 from typing import Literal
 from textual.content import Content
 from rich.console import RenderableType
-import logging 
+import logging
 from commands.messages import FilePathProvided
-logging.basicConfig(filename="editor_view.log", level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+from core.paths import LOG_FILE_STR
+logging.basicConfig(filename=LOG_FILE_STR, level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
 
 

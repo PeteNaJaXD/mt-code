@@ -1,6 +1,7 @@
 from icecream import ic
 import logging
-logging.basicConfig(filename="editor_view.log", level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+from core.paths import LOG_FILE_STR
+logging.basicConfig(filename=LOG_FILE_STR, level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
 
 class Buffer():

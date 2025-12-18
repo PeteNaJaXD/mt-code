@@ -9,8 +9,9 @@ from ui.overlay import Overlay
 from textual.content import Content
 from commands.messages import GitCommitMessageSubmitted
 from rich.console import RenderableType
-import logging 
-logging.basicConfig(filename="editor_view.log", level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+import logging
+from core.paths import LOG_FILE_STR
+logging.basicConfig(filename=LOG_FILE_STR, level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 from textual.events import Key
 
 

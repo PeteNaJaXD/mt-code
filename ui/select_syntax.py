@@ -4,7 +4,8 @@ from textual.widgets.option_list import Option
 from commands.messages import SelectSyntaxEvent
 import difflib
 import logging
-logging.basicConfig(filename="editor_view.log", level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+from core.paths import LOG_FILE_STR
+logging.basicConfig(filename=LOG_FILE_STR, level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
 class SelectSyntax(Overlay):
     def __init__(self, syntaxes: list, *args, **kwargs):

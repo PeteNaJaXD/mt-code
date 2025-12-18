@@ -1,8 +1,7 @@
 import os
 from textual.widgets import TextArea
 from tree_sitter_language_pack import get_language
-
-HIGHLIGHT_DIR = "language_highlighting"
+from core.paths import HIGHLIGHT_DIR_STR as HIGHLIGHT_DIR
 
 
 def register_supported_languages(text_area: TextArea) -> list[str]:

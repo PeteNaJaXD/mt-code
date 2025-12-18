@@ -14,7 +14,8 @@ from ui.save_as import SaveAsPopup
 from ui.code_editor import CodeEditor
 from commands.messages import EditorSavedAs, FilePathProvided, UseFile, EditorOpenFile, SaveAsProvided, EditorSaveFile, EditorDirtyFile
 from ui.open_file import OpenFilePopup
-logging.basicConfig(filename="editor_view.log", level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+from core.paths import LOG_FILE_STR
+logging.basicConfig(filename=LOG_FILE_STR, level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 import random
 import string
 import os
@@ -32,6 +33,9 @@ class EditorView(Container):
         return first + rest
     def hide(self):
         self.styles.display = "none"
+        # Close completions overlay when hiding the editor
+        if hasattr(self, 'code_area') and self.code_area:
+            self.code_area._close_completions_overlay()
     def show(self):
         self.styles.display = "block"
     

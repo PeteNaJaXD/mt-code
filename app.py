@@ -11,7 +11,8 @@ from ui.folder_view import FolderView
 import logging
 import os
 from textual import events
-logging.basicConfig(filename="editor_view.log", level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+from core.paths import LOG_FILE_STR, CSS_PATH_STR
+logging.basicConfig(filename=LOG_FILE_STR, level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # Run with: python app.py
 
@@ -40,7 +41,7 @@ class TextualApp(App):
                 self.cwd = os.getcwd()
             self.folder_view = FolderView(path=self.cwd)
     ENABLE_COMMAND_PALETTE = False
-    CSS_PATH = "config/app.tcss"
+    CSS_PATH = CSS_PATH_STR
     BINDINGS = [
         # Kill default focus navigation
         Binding("tab", "custom_tab", show=False, priority=True),

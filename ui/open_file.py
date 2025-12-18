@@ -7,8 +7,9 @@ from commands.messages import FilePathProvided
 import os
 import difflib
 import logging
+from core.paths import LOG_FILE_STR
 
-logging.basicConfig(filename="editor_view.log", level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(filename=LOG_FILE_STR, level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
 
 class OpenFilePopup(Overlay):

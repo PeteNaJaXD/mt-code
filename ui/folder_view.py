@@ -3,8 +3,9 @@ import logging
 from commands.messages import FileSelected
 from pathlib import Path
 import asyncio
+from core.paths import LOG_FILE_STR
 
-logging.basicConfig(filename="editor_view.log", level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(filename=LOG_FILE_STR, level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
 class FolderView(DirectoryTree):
     def __init__(self, *args, **kwargs):

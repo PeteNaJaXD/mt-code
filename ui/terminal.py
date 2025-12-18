@@ -10,8 +10,9 @@ import asyncio
 from pathlib import Path
 import re
 import pyperclip
+from core.paths import LOG_FILE_STR
 
-logging.basicConfig(filename="editor_view.log", level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(filename=LOG_FILE_STR, level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 KEY_CHAR_MAP = {
     "full_stop": ".",
     "slash": "/",
