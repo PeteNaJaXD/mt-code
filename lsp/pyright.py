@@ -5,7 +5,10 @@ import sys
 from pathlib import Path
 import logging
 from core.paths import LOG_FILE_STR
+import os
 
+parent_dir = os.path.dirname(os.path.abspath(__file__))
+grandparent_dir = os.path.dirname(parent_dir)
 logging.basicConfig(filename=LOG_FILE_STR, level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
 class PyrightServer:
@@ -21,7 +24,7 @@ class PyrightServer:
     async def start(self):
         logging.info("starting pyright server")
         self.proc = await asyncio.create_subprocess_exec(
-            "pyright-langserver", "--stdio",
+           f"{grandparent_dir}/venv/bin/pyright-langserver", "--stdio",
             stdin=subprocess.PIPE, 
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE

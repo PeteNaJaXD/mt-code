@@ -15,3 +15,30 @@ need a custom bash command "open" in the .zshrc used in the config that hooks in
 for example - open test.py
 fires a message to the workspace in the same instance and it attempts to open test.py or create the file
 
+╭──────────────────────────────────────────────────────── Traceback (most recent call last) ────────────────────────────────────────────────────────╮
+│ /mnt/ssd/Coding/mt-code/app.py:114 in on_save_all_files                                                                                           │
+│                                                                                                                                                   │
+│   111 │   #     if event.is_forwarded:                                                                                                            │
+│   112 │   #         self.screen.focus_next()                                                                                                      │
+│   113 │   def on_save_all_files(self, event: SaveAllFiles):                                                                                       │
+│ ❱ 114 │   │   self.workspace.save_all_files()                                                                                                     │
+│   115 │   │   quit()                                                                                                                              │
+│   116 if __name__ == "__main__":                                                                                                                  │
+│   117 │   TextualApp().run()                                                                                                                      │
+│                                                                                                                                                   │
+│ ╭───────────────────────────────────────────── locals ─────────────────────────────────────────────╮                                              │
+│ │ event = SaveAllFiles()                                                                           │                                              │
+│ │  self = TextualApp(title='TextualApp', classes={'-dark-mode'}, pseudo_classes={'focus', 'dark'}) │                                              │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯                                              │
+│                                                                                                                                                   │
+│ /mnt/ssd/Coding/mt-code/workspace/workspace.py:304 in save_all_files                                                                              │
+│                                                                                                                                                   │
+│   301 │   │   for tab in self.tab_manager.tabs.keys():                                         ╭────────────────── locals ──────────────────╮     │
+│   302 │   │   │   editor = self.tab_manager.tabs[tab]                                          │ editor = EditorView(classes='editor-view') │     │
+│   303 │   │   │   if editor.file_path:                                                         │   self = Workspace()                       │     │
+│ ❱ 304 │   │   │   │   editor.code_area.save_file()                                             │    tab = '1'                               │     │
+│   305                                                                                          ╰────────────────────────────────────────────╯     │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+AttributeError: 'EditorView' object has no attribute 'code_area'
+
+fix that

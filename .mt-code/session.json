@@ -2,8 +2,12 @@
   "open_tabs": [
     {
       "file_path": "/mnt/ssd/Coding/mt-code/.gitignore",
+      "is_active": false
+    },
+    {
+      "file_path": "/mnt/ssd/Coding/mt-code/lsp/pyright.py",
       "is_active": true
     }
   ],
-  "active_tab_path": "/mnt/ssd/Coding/mt-code/.gitignore"
+  "active_tab_path": "/mnt/ssd/Coding/mt-code/lsp/pyright.py"
 }
