@@ -1,6 +1,6 @@
 # mt-code
 
-A lightweight terminal-based code editor with LSP support.
+A lightweight terminal-based code editor with LSP support, plugins, command palette and syntax highlighting.
 
 ## Demo
 

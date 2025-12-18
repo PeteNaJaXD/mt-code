@@ -2,8 +2,16 @@
   "open_tabs": [
     {
       "file_path": "/mnt/ssd/Coding/mt-code/app.py",
+      "is_active": false
+    },
+    {
+      "file_path": "/mnt/ssd/Coding/mt-code/notes.txt",
+      "is_active": false
+    },
+    {
+      "file_path": "/mnt/ssd/Coding/mt-code/README.md",
       "is_active": true
     }
   ],
-  "active_tab_path": "/mnt/ssd/Coding/mt-code/app.py"
+  "active_tab_path": "/mnt/ssd/Coding/mt-code/README.md"
 }
