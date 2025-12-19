@@ -8,6 +8,7 @@ This module contains all LSP-related functionality including:
 
 import asyncio
 import logging
+import re
 from pathlib import Path
 
 from lsp.pyright import PyrightServer
@@ -232,19 +233,17 @@ class LSPMixin:
             current_line = str(self.get_line(line))
             text_before_cursor = current_line[:col]
 
-            words = text_before_cursor.split()
-            if words:
-                partial = words[-1]
-                if insert_text.startswith(partial):
-                    remaining = insert_text[len(partial):]
-                    self.insert(remaining)
-                    logging.info(
-                        f"Tab completion: inserted '{remaining}' "
-                        f"(full: {insert_text}, partial: {partial})"
-                    )
-                else:
-                    self.insert(insert_text)
-                    logging.info(f"Tab completion: inserted full '{insert_text}'")
+            # Use regex to find partial word - handles brackets, dots, etc.
+            match = re.search(r'(\w+)$', text_before_cursor)
+            if match:
+                partial = match.group(1)
+                # Delete the partial word first, then insert full completion
+                for _ in range(len(partial)):
+                    self.action_delete_left()
+                self.insert(insert_text)
+                logging.info(
+                    f"Tab completion: deleted '{partial}', inserted '{insert_text}'"
+                )
             else:
                 self.insert(insert_text)
                 logging.info(f"Tab completion: inserted '{insert_text}'")
