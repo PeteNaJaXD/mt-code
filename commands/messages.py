@@ -104,3 +104,19 @@ class RenameFileProvided(Message):
         self.old_path = old_path
         self.new_path = new_path
 
+
+class SelectAIEvent(Message):
+    """Message sent when an AI provider is selected."""
+
+    def __init__(self, provider: str):
+        super().__init__()
+        self.provider = provider
+
+
+class APIKeySet(Message):
+    """Message sent when an API key is set."""
+
+    def __init__(self, provider: str):
+        super().__init__()
+        self.provider = provider
+

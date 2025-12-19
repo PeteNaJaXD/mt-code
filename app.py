@@ -1,13 +1,14 @@
 from textual.app import App, ComposeResult
 from workspace.workspace import Workspace
 import sys
-from commands.messages import AppNextTab, TabMessage, FileSelected, FilePathProvided, WorkspaceNewTab, WorkspaceRemoveTab, FocusEditor, SaveAllFiles
+from commands.messages import AppNextTab, TabMessage, FileSelected, FilePathProvided, WorkspaceNewTab, WorkspaceRemoveTab, FocusEditor, SaveAllFiles, SelectAIEvent, APIKeySet
 from pathlib import Path
 from textual.events import Key, Resize
 from textual.binding import Binding
 from ui.side_view import SideView
 from ui.confirm_exit import ConfirmExit
 from ui.folder_view import FolderView
+from ui.ai_view import AIView
 import logging
 import os
 from textual import events
@@ -40,6 +41,7 @@ class TextualApp(App):
             else:
                 self.cwd = os.getcwd()
             self.folder_view = FolderView(path=self.cwd)
+            self.ai_view = AIView()
     ENABLE_COMMAND_PALETTE = False
     CSS_PATH = CSS_PATH_STR
     BINDINGS = [
@@ -66,6 +68,9 @@ class TextualApp(App):
             project_root=self.cwd
         )
         self.mount(self.workspace)
+        self.mount(self.ai_view)
+        # Connect AI view to workspace for editor access
+        self.ai_view.set_workspace(self.workspace)
     def on_file_selected(self, event: FileSelected):
         self.workspace.post_message(FilePathProvided(str(event.path)))
     def action_switch_tab(self):
@@ -113,15 +118,28 @@ class TextualApp(App):
         logging.info("resized terminal to " + str(event.size.width))
         width = int(event.size.width * 0.3)
 
-        # clamp between 33 and 41 (values i tested)
+        # clamp between 25 and 38
         width = max(25, min(width, 38))
 
         self.folder_view.styles.width = width
+        self.ai_view.styles.width = width
     # def on_tab_message(self, event: TabMessage):
     #     if event.is_forwarded:
     #         self.screen.focus_next()
     def on_save_all_files(self, event: SaveAllFiles):
         self.workspace.save_all_files()
         quit()
+
+    def on_select_ai_event(self, event: SelectAIEvent):
+        """Handle AI provider selection."""
+        if hasattr(self, 'ai_view') and self.ai_view:
+            self.ai_view.switch_provider(event.provider)
+
+    def on_api_key_set(self, event: APIKeySet):
+        """Handle API key being set."""
+        if hasattr(self, 'ai_view') and self.ai_view:
+            # Reinitialize the AI chat to pick up the new key
+            self.ai_view.reinit_provider()
+
 if __name__ == "__main__":
     TextualApp().run()

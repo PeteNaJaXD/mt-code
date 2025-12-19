@@ -14,6 +14,8 @@ from commands.messages import (
 )
 from ui.find_and_replace import FindAndReplace
 from ui.select_syntax import SelectSyntax
+from ui.select_ai import SelectAI
+from ui.api_key_input import APIKeyInput
 from ui.success_overlay import SuccessOverlay
 from ui.line_input import LineInput
 from ui.commit_message import GitCommitMessage
@@ -59,7 +61,10 @@ class WorkspaceCommandsMixin:
             "git_push": self.cmd_git_push,
             "edit_plugins": self.cmd_edit_plugins,
             "edit_keybindings": self.cmd_edit_keybindings,
-            "command_palette": self.cmd_command_palette
+            "command_palette": self.cmd_command_palette,
+            "select_ai": self.cmd_select_ai,
+            "set_api_key": self.cmd_set_api_key,
+            "ask_ai": self.cmd_ask_ai
         }
 
     def dispatch_command(self, command: str, **kwargs):
@@ -234,7 +239,35 @@ class WorkspaceCommandsMixin:
 
     def cmd_edit_keybindings(self, **kwargs):
         """Open the keybindings editor overlay."""
-        self.mount(KeybindingsOverlay())
+        self.screen.mount(KeybindingsOverlay())
+
+    def cmd_select_ai(self, **kwargs):
+        """Open AI provider selection dialog."""
+        logging.info("Selecting AI provider")
+        # Get AI view from app
+        if hasattr(self.app, 'ai_view') and self.app.ai_view.ai_chat:
+            ai_chat = self.app.ai_view.ai_chat
+            providers = ai_chat.get_available_providers()
+            current = ai_chat.get_current_provider_name()
+            self.screen.mount(SelectAI(providers, current))
+
+    def cmd_set_api_key(self, **kwargs):
+        """Open API key input dialog."""
+        logging.info("Opening API key input")
+        self.screen.mount(APIKeyInput())
+
+    def cmd_ask_ai(self, **kwargs):
+        """Send current selection to AI."""
+        logging.info("Sending selection to AI")
+        if hasattr(self.app, 'ai_view') and self.app.ai_view:
+            # Get selected text from editor
+            editor = self.tab_manager.get_active_editor()
+            if editor and hasattr(editor, 'code_area') and editor.code_area:
+                selected = getattr(editor.code_area, 'selected_text', '')
+                if selected:
+                    self.app.ai_view.ask_about_code(selected)
+                else:
+                    self.app.ai_view.ask_about_code(editor.code_area.text, is_full_file=True)
 
     def cmd_command_palette(self, **kwargs):
         """Open the command palette."""
@@ -273,4 +306,7 @@ class WorkspaceCommandsMixin:
             "Go To Line": "go_to_line",
             "Edit Plugins": "edit_plugins",
             "Edit Keybindings": "edit_keybindings",
+            "Select AI Provider": "select_ai",
+            "Set API Key": "set_api_key",
+            "Ask AI About Selection": "ask_ai",
         }

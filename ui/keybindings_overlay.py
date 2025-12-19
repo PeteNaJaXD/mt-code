@@ -43,6 +43,7 @@ AVAILABLE_COMMANDS = [
     ("Edit Plugins", "edit_plugins"),
     ("Edit Keybindings", "edit_keybindings"),
     ("Command Palette", "command_palette"),
+    ("Ask AI About Selection", "ask_ai")
 ]
 
 
@@ -53,7 +54,7 @@ class KeybindingRow(Horizontal):
     KeybindingRow {
         height: auto;
         min-height: 3;
-        padding: 0 1;
+        padding: 0;
         border-bottom: solid $primary-darken-3;
         width: 100%;
     }
@@ -63,7 +64,7 @@ class KeybindingRow(Horizontal):
     }
 
     KeybindingRow .keybind-key {
-        width: 18;
+        width: 12;
         color: $success;
         content-align: left middle;
     }
@@ -76,14 +77,11 @@ class KeybindingRow(Horizontal):
     }
 
     KeybindingRow .rebind-btn {
-        width: 10;
-        min-width: 10;
+        width: auto;
     }
 
     KeybindingRow .del-btn {
-        width: 7;
-        min-width: 7;
-        margin-left: 1;
+        width: auto;
     }
     """
 
@@ -106,7 +104,6 @@ class AddKeybindingOverlay(Overlay):
     DEFAULT_CSS = """
     AddKeybindingOverlay {
         align: center middle;
-        width: 100%;
         height: 70%;
         background: $surface 80%;
         position: absolute;
@@ -114,7 +111,6 @@ class AddKeybindingOverlay(Overlay):
     }
 
     #add-keybind-container {
-        width: 80;
         height: 100%;
         background: $surface;
         border: tall $primary;
@@ -129,7 +125,7 @@ class AddKeybindingOverlay(Overlay):
     }
 
     .add-row {
-        height: 70%;
+        height: auto;
         min-height: 3;
         margin-bottom: 1;
         width: 100%;
@@ -161,19 +157,19 @@ class AddKeybindingOverlay(Overlay):
     }
 
     #add-type-select {
-        width: 30;
+        width: 1fr;
     }
 
     #add-action-select {
-        width: 50;
+        width: 1fr;
     }
 
     #add-action-input {
-        width: 50;
+        width: 1fr;
     }
 
     #add-desc-input {
-        width: 50;
+        width: 1fr;
     }
 
     #add-buttons {
@@ -420,7 +416,7 @@ class KeybindingsOverlay(Overlay):
     }
 
     #keybindings-container {
-        width: 100;
+        width: 100%;
         height: 100%;
         max-height: 85%;
         background: $surface;
@@ -445,7 +441,7 @@ class KeybindingsOverlay(Overlay):
 
     .header-row {
         height: 3;
-        padding: 0 1;
+        padding: 0;
         background: $primary-darken-1;
         text-style: bold;
     }
@@ -455,7 +451,7 @@ class KeybindingsOverlay(Overlay):
     }
 
     .header-key {
-        width: 18;
+        width: 12;
     }
 
     .header-desc {
@@ -463,7 +459,7 @@ class KeybindingsOverlay(Overlay):
     }
 
     .header-spacer {
-        width: 18;
+        width: auto;
     }
 
     #button-row {
@@ -526,13 +522,13 @@ class KeybindingsOverlay(Overlay):
         """Open the add keybinding overlay."""
         self.styles.display = "none"
         add_overlay = AddKeybindingOverlay(parent_overlay=self)
-        self.app.mount(add_overlay)
+        self.screen.mount(add_overlay)
         add_overlay.focus()
 
     def open_edit_overlay(self, key: str):
         """Open the edit keybinding overlay."""
         self.styles.display = "none"
-        self.app.mount(AddKeybindingOverlay(parent_overlay=self, edit_key=key))
+        self.screen.mount(AddKeybindingOverlay(parent_overlay=self, edit_key=key))
 
     def delete_binding(self, key: str):
         """Delete a keybinding."""

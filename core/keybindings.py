@@ -22,7 +22,6 @@ logging.basicConfig(
 # Default keybindings - maps key combo to action
 DEFAULT_KEYBINDINGS = {
     "ctrl+s": {"type": "command", "action": "save_file", "description": "Save file"},
-    "ctrl+shift+s": {"type": "command", "action": "save_file_as", "description": "Save file as"},
     "ctrl+o": {"type": "command", "action": "open_file", "description": "Open file"},
     "ctrl+n": {"type": "command", "action": "create_file", "description": "New file"},
     "ctrl+w": {"type": "command", "action": "close_tab", "description": "Close tab"},
@@ -32,11 +31,9 @@ DEFAULT_KEYBINDINGS = {
     "ctrl+f": {"type": "command", "action": "find", "description": "Find"},
     "ctrl+g": {"type": "command", "action": "go_to_line", "description": "Go to line"},
     "ctrl+p": {"type": "command", "action": "command_palette", "description": "Command palette"},
-    "ctrl+`": {"type": "command", "action": "focus_terminal", "description": "Focus terminal"},
+    "ctrl+t": {"type": "command", "action": "focus_terminal", "description": "Focus terminal"},
     "ctrl+e": {"type": "command", "action": "focus_editor", "description": "Focus editor"},
-    "ctrl+b": {"type": "command", "action": "toggle_sidebar", "description": "Toggle sidebar"},
     "f5": {"type": "command", "action": "run_file", "description": "Run file"},
-    "ctrl+shift+p": {"type": "command", "action": "command_palette", "description": "Command palette"},
 }
 
 # Config file path
