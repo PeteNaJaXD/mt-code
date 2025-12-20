@@ -10,8 +10,9 @@ from core.paths import LOG_FILE_STR
 from core.languages import get_run_command
 
 from commands.messages import (
-    WorkspaceNewTab, EditorUndo, EditorRedo, WorkspaceRemoveTab
+    WorkspaceNewTab, EditorUndo, EditorRedo, WorkspaceRemoveTab, ToggleAIEvent
 )
+from core.ai_config import get_ai_config
 from ui.find_and_replace import FindAndReplace
 from ui.select_syntax import SelectSyntax
 from ui.select_ai import SelectAI
@@ -64,7 +65,8 @@ class WorkspaceCommandsMixin:
             "command_palette": self.cmd_command_palette,
             "select_ai": self.cmd_select_ai,
             "set_api_key": self.cmd_set_api_key,
-            "ask_ai": self.cmd_ask_ai
+            "ask_ai": self.cmd_ask_ai,
+            "toggle_ai": self.cmd_toggle_ai
         }
 
     def dispatch_command(self, command: str, **kwargs):
@@ -269,6 +271,22 @@ class WorkspaceCommandsMixin:
                 else:
                     self.app.ai_view.ask_about_code(editor.code_area.text, is_full_file=True)
 
+    def cmd_toggle_ai(self, **kwargs):
+        """Toggle AI features on/off."""
+        logging.info("=== cmd_toggle_ai called ===")
+        ai_config = get_ai_config()
+        current_state = ai_config.is_ai_enabled()
+        logging.info(f"Current AI enabled state: {current_state}")
+        new_state = not current_state
+        logging.info(f"New AI enabled state: {new_state}")
+        ai_config.set_ai_enabled(new_state)
+        # Directly toggle the AI view visibility
+        if hasattr(self.app, 'ai_view') and self.app.ai_view:
+            new_display = "block" if new_state else "none"
+            logging.info(f"Setting ai_view display to: {new_display}")
+            self.app.ai_view.styles.display = new_display
+            logging.info(f"ai_view display is now: {self.app.ai_view.styles.display}")
+
     def cmd_command_palette(self, **kwargs):
         """Open the command palette."""
         self.open_command_palette()
@@ -309,4 +327,5 @@ class WorkspaceCommandsMixin:
             "Select AI Provider": "select_ai",
             "Set API Key": "set_api_key",
             "Ask AI About Selection": "ask_ai",
+            "Toggle AI Features": "toggle_ai",
         }

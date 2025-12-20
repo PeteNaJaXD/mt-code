@@ -120,3 +120,11 @@ class APIKeySet(Message):
         super().__init__()
         self.provider = provider
 
+
+class ToggleAIEvent(Message):
+    """Message sent when AI features are toggled."""
+
+    def __init__(self, enabled: bool):
+        super().__init__()
+        self.enabled = enabled
+

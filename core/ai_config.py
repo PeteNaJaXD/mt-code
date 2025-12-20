@@ -20,6 +20,7 @@ AI_CONFIG_FILE = CONFIG_DIR / "ai.json"
 
 DEFAULT_CONFIG = {
     "default_provider": "openai",
+    "ai_enabled": True,
     "providers": {
         "openai": {
             "api_key": "",
@@ -72,6 +73,8 @@ class AIConfig:
         result = DEFAULT_CONFIG.copy()
         if "default_provider" in config:
             result["default_provider"] = config["default_provider"]
+        if "ai_enabled" in config:
+            result["ai_enabled"] = config["ai_enabled"]
         if "providers" in config:
             for provider, settings in config["providers"].items():
                 if provider in result["providers"]:
@@ -140,6 +143,15 @@ class AIConfig:
     def set_default_provider(self, provider: str):
         """Set the default provider."""
         self._config["default_provider"] = provider
+        self._save_config()
+
+    def is_ai_enabled(self) -> bool:
+        """Check if AI features are enabled."""
+        return self._config.get("ai_enabled", True)
+
+    def set_ai_enabled(self, enabled: bool):
+        """Enable or disable AI features."""
+        self._config["ai_enabled"] = enabled
         self._save_config()
 
     def reload(self):

@@ -1,7 +1,8 @@
 from textual.app import App, ComposeResult
 from workspace.workspace import Workspace
 import sys
-from commands.messages import AppNextTab, TabMessage, FileSelected, FilePathProvided, WorkspaceNewTab, WorkspaceRemoveTab, FocusEditor, SaveAllFiles, SelectAIEvent, APIKeySet
+from commands.messages import AppNextTab, TabMessage, FileSelected, FilePathProvided, WorkspaceNewTab, WorkspaceRemoveTab, FocusEditor, SaveAllFiles, SelectAIEvent, APIKeySet, ToggleAIEvent
+from core.ai_config import get_ai_config
 from pathlib import Path
 from textual.events import Key, Resize
 from textual.binding import Binding
@@ -71,6 +72,10 @@ class TextualApp(App):
         self.mount(self.ai_view)
         # Connect AI view to workspace for editor access
         self.ai_view.set_workspace(self.workspace)
+        # Set initial AI view visibility based on config
+        ai_config = get_ai_config()
+        if not ai_config.is_ai_enabled():
+            self.ai_view.styles.display = "none"
     def on_file_selected(self, event: FileSelected):
         self.workspace.post_message(FilePathProvided(str(event.path)))
     def action_switch_tab(self):
@@ -140,6 +145,17 @@ class TextualApp(App):
         if hasattr(self, 'ai_view') and self.ai_view:
             # Reinitialize the AI chat to pick up the new key
             self.ai_view.reinit_provider()
+
+    def on_toggle_ai_event(self, event: ToggleAIEvent):
+        """Handle AI features being toggled."""
+        logging.info(f"=== on_toggle_ai_event received, enabled={event.enabled} ===")
+        if hasattr(self, 'ai_view') and self.ai_view:
+            new_display = "block" if event.enabled else "none"
+            logging.info(f"Setting ai_view.styles.display to '{new_display}'")
+            self.ai_view.styles.display = new_display
+            logging.info(f"ai_view.styles.display is now: {self.ai_view.styles.display}")
+        else:
+            logging.info("ai_view not found!")
 
 if __name__ == "__main__":
     TextualApp().run()
