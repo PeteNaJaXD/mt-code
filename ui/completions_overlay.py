@@ -19,7 +19,7 @@ class CompletionsOverlay(Overlay):
     """Overlay widget for showing code completions."""
     
     def __init__(self, completions: list, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(center_on_screen=False, *args, **kwargs)
         self.completions = completions[:5]  # Store only first 5
         logging.info(f"CompletionsOverlay created with {len(self.completions)} items")
     

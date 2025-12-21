@@ -5,6 +5,7 @@ from commands.messages import TabMessage, SaveAllFiles
 
 class ConfirmExit(Overlay):
     def on_mount(self):
+        super().on_mount()
         self.save_button = Button("Save", classes="confirm_button padding_1")
         self.exit_button = Button("Exit without saving", classes="exit_button padding_1")
         self.mount(

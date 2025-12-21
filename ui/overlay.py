@@ -8,10 +8,11 @@ from textual.widgets import Static, Button
 class Overlay(Container):
     """Base overlay class with responsive width/height based on terminal size."""
 
-    def __init__(self, width: int = None, height: int = None, *args, **kwargs):
+    def __init__(self, width: int = None, height: int = None, center_on_screen: bool = True, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._overlay_width = width
         self._overlay_height = height
+        self._center_on_screen = center_on_screen
 
     def _get_responsive_size(self, terminal_width: int, terminal_height: int) -> tuple[str, str]:
         """Calculate responsive width/height percentages based on terminal size."""
@@ -57,11 +58,26 @@ class Overlay(Container):
 
     def on_mount(self):
         self.classes = "overlay"
+        self.styles.position = "absolute"
         self._apply_responsive_size()
+        if self._center_on_screen:
+            self.call_after_refresh(self._center_overlay)
+
+    def _center_overlay(self):
+        """Center the overlay on the screen using absolute coordinates."""
+        screen_width = self.screen.size.width
+        screen_height = self.screen.size.height
+        overlay_width = self.size.width
+        overlay_height = self.size.height
+        x = (screen_width - overlay_width) // 2
+        y = (screen_height - overlay_height) // 2
+        self.styles.offset = (x, y)
 
     def on_resize(self, event: Resize):
-        """Update overlay size when terminal is resized."""
+        """Update overlay size and position when terminal is resized."""
         self._apply_responsive_size()
+        if self._center_on_screen:
+            self._center_overlay()
 
     def on_key(self, event: Key):
         if event.key == "escape":

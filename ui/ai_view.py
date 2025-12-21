@@ -383,7 +383,7 @@ IMPORTANT: Return ONLY the complete modified code, nothing else. No explanations
 
             # Show diff overlay
             diff_overlay = DiffOverlay(original_code, new_code)
-            self.app.mount(diff_overlay)
+            self.screen.mount(diff_overlay)
 
         except Exception as e:
             logging.error(f"AI edit error: {e}")

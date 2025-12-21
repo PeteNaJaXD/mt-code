@@ -11,9 +11,17 @@ class SelectSyntax(Overlay):
     def __init__(self, syntaxes: list, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.syntaxes = syntaxes
+
+    def _post_to_workspace(self, message):
+        """Post message to workspace."""
+        from workspace.workspace import Workspace
+        workspace = self.app.query_one(Workspace)
+        workspace.post_message(message)
+
     def on_mount(self):
+        super().on_mount()
         # option list with search bar
-        self.status = Static("Select syntax")
+        self.status = Static("Select syntax", classes="overlay_title")
         self.mount(self.status)
         self.search_bar = Input(placeholder=">")
         self.mount(self.search_bar)
@@ -23,10 +31,11 @@ class SelectSyntax(Overlay):
             syntax_options.append(Option(syntax))
         self.option_list = OptionList(*syntax_options, classes="syntax_options")
         self.mount(self.option_list)
+
     def on_option_list_option_selected(self, event: OptionList.OptionSelected):
         self.status.update("Selected: " + event.option.prompt)
         logging.info(self.status.content)
-        self.post_message(SelectSyntaxEvent(event.option.prompt))
+        self._post_to_workspace(SelectSyntaxEvent(event.option.prompt))
         self.remove()
     async def on_input_changed(self, event: Input.Changed):
         query = event.value

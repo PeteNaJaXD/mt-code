@@ -16,14 +16,24 @@ logging.basicConfig(filename=LOG_FILE_STR, level=logging.DEBUG, format="%(asctim
 
 
 class SaveAsPopup(Overlay):
+    def _post_to_active_editor(self, message):
+        """Post message to active editor."""
+        from workspace.workspace import Workspace
+        workspace = self.app.query_one(Workspace)
+        editor = workspace.tab_manager.get_active_editor()
+        if editor:
+            editor.post_message(message)
+
     def on_mount(self):
-        self.mount(Static("Save as"))
+        super().on_mount()
+        self.mount(Static("Save as", classes="overlay_title"))
         self.file_name_input = Input(placeholder="relative/path/to/save", classes="save_as")
         self.mount(self.file_name_input)
         self.file_name_input.focus()
+
     async def on_input_submitted(self, event: Input.Submitted):
         if "save_as" in event.input.classes:
             self.file_path = event.input.value
             from commands.messages import SaveAsProvided
-            self.post_message(SaveAsProvided(self.file_path))
+            self._post_to_active_editor(SaveAsProvided(self.file_path))
             self.remove()

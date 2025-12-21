@@ -68,9 +68,9 @@ class EditorView(Container):
     def on_editor_saved_as(self, event: EditorSavedAs):
         logging.info(event.contents)
         self.contents = event.contents
-        self.mount(SaveAsPopup())
+        self.screen.mount(SaveAsPopup())
     def on_editor_open_file(self, event: EditorOpenFile):
-        self.mount(OpenFilePopup())
+        self.screen.mount(OpenFilePopup())
     def on_file_path_provided(self, event: FilePathProvided):
         logging.info("file path provided!")
         file_path = event.file_path

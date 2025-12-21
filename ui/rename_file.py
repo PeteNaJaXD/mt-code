@@ -9,8 +9,15 @@ class RenameFilePopup(Overlay):
         super().__init__(*args, **kwargs)
         self.current_path = current_path
 
+    def _post_to_workspace(self, message):
+        """Post message to workspace."""
+        from workspace.workspace import Workspace
+        workspace = self.app.query_one(Workspace)
+        workspace.post_message(message)
+
     def on_mount(self):
-        self.mount(Static("Rename file"))
+        super().on_mount()
+        self.mount(Static("Rename file", classes="overlay_title"))
         self.file_name_input = Input(
             placeholder="new/path/to/file",
             value=self.current_path,
@@ -29,5 +36,5 @@ class RenameFilePopup(Overlay):
         if "rename_file" in event.input.classes:
             new_path = event.input.value
             if new_path and new_path != self.current_path:
-                self.post_message(RenameFileProvided(self.current_path, new_path))
+                self._post_to_workspace(RenameFileProvided(self.current_path, new_path))
             self.remove()

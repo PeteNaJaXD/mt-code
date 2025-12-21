@@ -477,7 +477,9 @@ class KeybindingsOverlay(Overlay):
         super().__init__(*args, **kwargs)
         self.manager = get_keybindings_manager()
         self.can_focus = True
+
     def on_mount(self):
+        super().on_mount()
         self.focus()
     def compose(self) -> ComposeResult:
         with Container(id="keybindings-container"):

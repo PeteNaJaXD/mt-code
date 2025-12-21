@@ -5,15 +5,15 @@
       "is_active": false
     },
     {
-      "file_path": "/home/juxtaa/coding/mt-code/app.py",
-      "is_active": false
-    },
-    {
       "file_path": "/home/juxtaa/coding/mt-code/test.py",
       "is_active": true
     },
     {
       "file_path": "/home/juxtaa/coding/mt-code/notes.txt",
+      "is_active": false
+    },
+    {
+      "file_path": "/home/juxtaa/coding/mt-code/commands/messages.py",
       "is_active": false
     }
   ],

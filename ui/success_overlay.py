@@ -4,7 +4,9 @@ class SuccessOverlay(Overlay):
     def __init__(self, message, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.message = message
+
     def on_mount(self):
+        super().on_mount()
         self.mount(Static(self.message, classes="success_message"))
         button = Button("close", classes="close_button")
         self.mount(button)

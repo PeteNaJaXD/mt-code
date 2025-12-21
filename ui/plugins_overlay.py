@@ -141,6 +141,6 @@ Status: {'Enabled' if plugin.enabled else 'Disabled'}
                 settings_widget._reopen_plugins_overlay = True
                 # Remove plugins overlay and mount settings
                 self.remove()
-                self.app.mount(settings_widget)
+                self.screen.mount(settings_widget)
             else:
                 self.info_panel.update("This plugin has no settings to configure.")

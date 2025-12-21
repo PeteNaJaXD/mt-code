@@ -105,7 +105,7 @@ class WorkspaceCommandsMixin:
         if not editor or not editor.file_path:
             logging.info("No file to rename")
             return
-        self.mount(RenameFilePopup(current_path=editor.file_path))
+        self.screen.mount(RenameFilePopup(current_path=editor.file_path))
 
     # === Tab Commands ===
 
@@ -154,7 +154,7 @@ class WorkspaceCommandsMixin:
     def cmd_go_to_line(self, **kwargs):
         """Go to specific line number."""
         num_lines = len(self.tab_manager.get_active_editor().code_area.document.lines)
-        self.mount(LineInput(num_lines))
+        self.screen.mount(LineInput(num_lines))
 
     def cmd_select_syntax(self, **kwargs):
         """Open syntax selection dialog."""
@@ -169,7 +169,7 @@ class WorkspaceCommandsMixin:
             except Exception:
                 pass
 
-        self.mount(SelectSyntax(available))
+        self.screen.mount(SelectSyntax(available))
 
     def cmd_run_file(self, **kwargs):
         """Run the current file in the terminal."""
@@ -217,7 +217,7 @@ class WorkspaceCommandsMixin:
         """Stage all changes."""
         res = git_actions.git_add(self.repo)
         if res:
-            self.mount(SuccessOverlay("Successfully staged all files"))
+            self.screen.mount(SuccessOverlay("Successfully staged all files"))
 
     def cmd_git_commit(self, **kwargs):
         """Open commit message dialog."""
@@ -227,17 +227,17 @@ class WorkspaceCommandsMixin:
         """Push to remote."""
         res = git_actions.git_push_origin_main(self.repo)
         if res:
-            self.mount(SuccessOverlay("Successfully pushed commit to branch main"))
+            self.screen.mount(SuccessOverlay("Successfully pushed commit to branch main"))
 
     def show_commit_input(self, id="commit"):
         """Show the commit message input dialog."""
-        self.mount(GitCommitMessage(message_id=id))
+        self.screen.mount(GitCommitMessage(message_id=id))
 
     # === Plugin Commands ===
 
     def cmd_edit_plugins(self, **kwargs):
         """Open the plugins management overlay."""
-        self.mount(PluginsOverlay(plugin_manager=self.plugin_manager))
+        self.screen.mount(PluginsOverlay(plugin_manager=self.plugin_manager))
 
     def cmd_edit_keybindings(self, **kwargs):
         """Open the keybindings editor overlay."""

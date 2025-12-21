@@ -176,7 +176,7 @@ class Workspace(WorkspaceCommandsMixin, Container):
     def on_workspace_new_tab(self, event: WorkspaceNewTab):
         """Handle request to open a new tab."""
         self.open_file_popup = OpenFilePopup(root_dir=self.project_root)
-        self.mount(self.open_file_popup)
+        self.screen.mount(self.open_file_popup)
 
     def on_app_next_tab(self, event: AppNextTab):
         """Handle request to switch to next tab."""
@@ -257,7 +257,7 @@ class Workspace(WorkspaceCommandsMixin, Container):
         """Open the command palette."""
         commands = self.get_command_palette_commands()
         self.command_palette = CommandPalette(commands)
-        self.mount(self.command_palette)
+        self.screen.mount(self.command_palette)
 
     def on_open_command_palette(self, event: OpenCommandPalette):
         """Handle request to open command palette."""
@@ -290,11 +290,11 @@ class Workspace(WorkspaceCommandsMixin, Container):
         if message_id == "all_3":
             res = git_actions.git_add_commit_push(self.repo, commit_message)
             if res:
-                self.mount(SuccessOverlay("Successfully added, commited and pushed all changes."))
+                self.screen.mount(SuccessOverlay("Successfully added, commited and pushed all changes."))
         elif message_id == "commit":
             res = git_actions.git_commit(self.repo, commit_message)
             if res:
-                self.mount(SuccessOverlay("Successfully committed changes"))
+                self.screen.mount(SuccessOverlay("Successfully committed changes"))
         message.input_widget.remove()
 
     def on_line_input_submitted(self, event: LineInputSubmitted):
@@ -304,7 +304,7 @@ class Workspace(WorkspaceCommandsMixin, Container):
             self.tab_manager.get_active_editor().code_area.move_cursor((int(event.line) - 1, 0))
         else:
             self.line_input = LineInput(num_lines)
-            self.mount(self.line_input)
+            self.screen.mount(self.line_input)
 
     async def on_tab_message(self, event: TabMessage):
         """Handle custom tab message for auto-completion."""

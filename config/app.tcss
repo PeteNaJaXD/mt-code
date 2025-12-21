@@ -23,13 +23,11 @@ Screen {
 
 .overlay {
     position: absolute;
-    offset: 50% 50%;
     width: 50%;
     height: 50%;
     content-align: center middle;
     layer: above;
     padding: 1 1 1 1;
-    /* align: center middle; */
 }
 
 /* Completions overlay - positioned dynamically at cursor, sized in code */

@@ -20,13 +20,22 @@ class GitCommitMessage(Overlay):
     def __init__(self, message_id, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.message_id = message_id
+
+    def _post_to_workspace(self, message):
+        """Post message to workspace."""
+        from workspace.workspace import Workspace
+        workspace = self.app.query_one(Workspace)
+        workspace.post_message(message)
+
     def on_mount(self):
-        self.mount(Static("Enter commit message"))
+        super().on_mount()
+        self.mount(Static("Enter commit message", classes="overlay_title"))
         self.text_input = Input(placeholder="commit_message", classes="git_commit_message")
         self.mount(self.text_input)
         self.text_input.focus()
+
     async def on_input_submitted(self, event: Input.Submitted):
-        self.post_message(GitCommitMessageSubmitted(self.message_id, event.input.value, event.input))
+        self._post_to_workspace(GitCommitMessageSubmitted(self.message_id, event.input.value, event.input))
         self.remove()
 
 

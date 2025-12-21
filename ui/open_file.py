@@ -21,13 +21,20 @@ class OpenFilePopup(Overlay):
         super().__init__(*args, **kwargs)
         self._initial_root_dir = root_dir
 
+    def _post_to_workspace(self, message):
+        """Post message to workspace."""
+        from workspace.workspace import Workspace
+        workspace = self.app.query_one(Workspace)
+        workspace.post_message(message)
+
     def on_mount(self):
+        super().on_mount()
         self.root_dir = self._initial_root_dir or os.getcwd()
         self.cwd = self.root_dir
         self.search_text = ""
         self.file_options = []
 
-        self.mount(Static("Open file"))
+        self.mount(Static("Open file", classes="overlay_title"))
 
         self.file_name_input = Input(
             placeholder="relative/path/to/open", classes="open_file"
@@ -104,7 +111,7 @@ class OpenFilePopup(Overlay):
             # Resolve path relative to root_dir, not cwd
             relative_path = event.input.value
             absolute_path = os.path.normpath(os.path.join(self.root_dir, relative_path))
-            self.post_message(FilePathProvided(absolute_path))
+            self._post_to_workspace(FilePathProvided(absolute_path))
             self.remove()
 
     def action_auto_complete(self):

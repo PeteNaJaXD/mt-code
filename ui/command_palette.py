@@ -16,7 +16,11 @@ class CommandPalette(Overlay):
         self.search_text = ""
 
     def on_mount(self):
-        # Option list with search bar
+        super().on_mount()
+
+        self.status = Static("Command palette", classes="overlay_title")
+        self.mount(self.status)
+
         self.search_bar = Input(placeholder=">")
         self.mount(self.search_bar)
         self.search_bar.focus()
@@ -24,9 +28,6 @@ class CommandPalette(Overlay):
         command_options = [Option(cmd) for cmd in self.commands]
         self.option_list = OptionList(*command_options, classes="commands_options")
         self.mount(self.option_list)
-
-        self.status = Static("Command palette")
-        self.mount(self.status)
 
     async def on_input_changed(self, event: Input.Changed):
         query = event.value
@@ -44,10 +45,16 @@ class CommandPalette(Overlay):
         for name in matches:
             self.option_list.add_option(Option(name))
 
+    def _post_command(self, command):
+        """Post command to workspace."""
+        from workspace.workspace import Workspace
+        workspace = self.app.query_one(Workspace)
+        workspace.post_message(CommandPaletteCommand(command))
+
     async def on_input_submitted(self, event: Input.Submitted):
         if event.input.value in self.commands:
             self.status.update("Selected: " + event.input.value)
-            self.post_message(CommandPaletteCommand(self.commands[event.input.value]))
+            self._post_command(self.commands[event.input.value])
             self.remove()
         else:
             self.option_list.focus()
@@ -55,7 +62,7 @@ class CommandPalette(Overlay):
 
     def on_option_list_option_selected(self, event: OptionList.OptionSelected):
         self.status.update("Selected: " + event.option.prompt)
-        self.post_message(CommandPaletteCommand(self.commands[event.option.prompt]))
+        self._post_command(self.commands[event.option.prompt])
         self.remove()
 
     def action_auto_complete(self):

@@ -3,3 +3,4 @@
 venv
 .mt-code
 config/ai.json
+.claude
