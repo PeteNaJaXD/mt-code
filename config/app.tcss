@@ -32,24 +32,23 @@ Screen {
     /* align: center middle; */
 }
 
-/* Completions overlay - positioned dynamically at cursor */
+/* Completions overlay - positioned dynamically at cursor, sized in code */
 #completions_overlay {
     position: absolute;
-    width: 40;
-    height: 7;
     layer: above;
     padding: 0;
     border: solid $primary;
     background: $surface;
-    overflow: auto;
+    overflow: hidden;
 }
 
 #completions_list {
     width: 100%;
-    height: 100%;
+    height: auto;
     border: none;
     background: $surface;
     padding: 0;
+    overflow: hidden;
 }
 
 #completions_list > .option-list--option {

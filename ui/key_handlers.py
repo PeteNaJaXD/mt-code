@@ -41,9 +41,15 @@ class KeyHandlersMixin:
         # Check if cursor moved away from completions
         self._check_cursor_moved_from_completion()
 
-        # Close completions on most key presses except escape/tab
-        if self._completions_overlay and event.key not in ["escape", "tab"]:
-            self._close_completions_overlay()
+        # Handle completions overlay keys
+        if self._completions_overlay:
+            if event.key in ["up", "down", "enter", "escape"]:
+                # Forward to overlay's key handler
+                self._completions_overlay.on_key(event)
+                return True
+            elif event.key != "tab":
+                # Close on other keys (tab handled separately for completion)
+                self._close_completions_overlay()
 
         # Handle shift+backspace as regular backspace
         if self._handle_shift_backspace(event):

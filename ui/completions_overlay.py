@@ -50,8 +50,32 @@ class CompletionsOverlay(Overlay):
     def on_mount(self):
         """Override parent on_mount to not add overlay class."""
         # Don't call super().on_mount() to avoid the overlay class styling
-        # which might be hiding the content
         logging.info(f"CompletionsOverlay mounted, option count: {len(self.completions_list._options)}")
+
+        # Calculate the max width needed for the completions
+        max_label_len = 0
+        for item in self.completions:
+            label = item.get("label", "")
+            detail = item.get("detail", "")
+            display_text = f"{label} - {detail}" if detail else label
+            max_label_len = max(max_label_len, len(display_text))
+
+        # Set dimensions explicitly to fit content
+        # Height: 1 line per option + 2 for border
+        # Width: max label length + padding + border
+        height = len(self.completions) + 2
+        width = min(max(max_label_len + 4, 20), 60)
+
+        self.styles.height = height
+        self.styles.width = width
+        self.styles.max_height = height
+        self.styles.max_width = width
+
+        # Also constrain the inner list
+        self.completions_list.styles.height = len(self.completions)
+        self.completions_list.styles.max_height = len(self.completions)
+
+        # DON'T focus - we handle arrow keys manually to avoid capturing all keys
     
     def on_option_list_option_selected(self, event: OptionList.OptionSelected):
         """Handle completion selection."""
@@ -62,14 +86,21 @@ class CompletionsOverlay(Overlay):
             self.remove()
     
     def on_key(self, event: events.Key):
-        """Handle key events."""
+        """Handle key events - only arrow keys and enter/escape."""
         if event.key == "escape":
             self.remove()
+            event.stop()
+        elif event.key == "down":
+            self.completions_list.action_cursor_down()
+            event.stop()
+        elif event.key == "up":
+            self.completions_list.action_cursor_up()
+            event.stop()
         elif event.key == "enter":
-            # Select the highlighted option
             if self.completions_list.highlighted is not None:
                 selected = self.completions[self.completions_list.highlighted]
                 self.post_message(CompletionSelected(selected))
                 self.remove()
+            event.stop()
 
 

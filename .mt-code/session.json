@@ -1,45 +1,21 @@
 {
   "open_tabs": [
     {
-      "file_path": "/mnt/ssd/Coding/mt-code/notes.txt",
+      "file_path": "/home/juxtaa/coding/mt-code/config/ai.json",
+      "is_active": false
+    },
+    {
+      "file_path": "/home/juxtaa/coding/mt-code/app.py",
+      "is_active": false
+    },
+    {
+      "file_path": "/home/juxtaa/coding/mt-code/test.py",
       "is_active": true
     },
     {
-      "file_path": "/mnt/ssd/Coding/mt-code/commands/messages.py",
-      "is_active": false
-    },
-    {
-      "file_path": "/mnt/ssd/Coding/mt-code/ui/command_palette.py",
-      "is_active": false
-    },
-    {
-      "file_path": "/mnt/ssd/Coding/mt-code/ui/keybindings_overlay.py",
-      "is_active": false
-    },
-    {
-      "file_path": "/mnt/ssd/Coding/mt-code/core/keybindings.py",
-      "is_active": false
-    },
-    {
-      "file_path": "/mnt/ssd/Coding/mt-code/workspace/workspace.py",
-      "is_active": false
-    },
-    {
-      "file_path": "/mnt/ssd/Coding/mt-code/editor_view.log",
-      "is_active": false
-    },
-    {
-      "file_path": "/mnt/ssd/Coding/mt-code/config/ai.json",
-      "is_active": false
-    },
-    {
-      "file_path": "/mnt/ssd/Coding/mt-code/test.py",
-      "is_active": false
-    },
-    {
-      "file_path": "/mnt/ssd/Coding/mt-code/install.sh",
+      "file_path": "/home/juxtaa/coding/mt-code/notes.txt",
       "is_active": false
     }
   ],
-  "active_tab_path": "/mnt/ssd/Coding/mt-code/notes.txt"
+  "active_tab_path": "/home/juxtaa/coding/mt-code/test.py"
 }
