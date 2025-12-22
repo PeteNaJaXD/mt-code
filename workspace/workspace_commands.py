@@ -23,6 +23,7 @@ from ui.commit_message import GitCommitMessage
 from ui.rename_file import RenameFilePopup
 from ui.plugins_overlay import PluginsOverlay
 from ui.keybindings_overlay import KeybindingsOverlay
+from ui.python_interpreter_select import PythonInterpreterSelect
 from git_utils import git_actions
 
 logging.basicConfig(
@@ -66,7 +67,8 @@ class WorkspaceCommandsMixin:
             "select_ai": self.cmd_select_ai,
             "set_api_key": self.cmd_set_api_key,
             "ask_ai": self.cmd_ask_ai,
-            "toggle_ai": self.cmd_toggle_ai
+            "toggle_ai": self.cmd_toggle_ai,
+            "select_python_interpreter": self.cmd_select_python_interpreter
         }
 
     def dispatch_command(self, command: str, **kwargs):
@@ -292,6 +294,17 @@ class WorkspaceCommandsMixin:
         """Open the command palette."""
         self.open_command_palette()
 
+    def cmd_select_python_interpreter(self, **kwargs):
+        """Open Python interpreter selection dialog."""
+        logging.info("Selecting Python interpreter")
+        # Get working directory from current file
+        editor = self.tab_manager.get_active_editor()
+        working_dir = None
+        if editor and editor.file_path:
+            from pathlib import Path
+            working_dir = str(Path(editor.file_path).parent)
+        self.screen.mount(PythonInterpreterSelect(working_dir=working_dir))
+
     # === Helper Methods ===
 
     def find_and_replace(self, editor):
@@ -329,4 +342,5 @@ class WorkspaceCommandsMixin:
             "Set API Key": "set_api_key",
             "Ask AI About Selection": "ask_ai",
             "Toggle AI Features": "toggle_ai",
+            "Select Python Interpreter": "select_python_interpreter",
         }

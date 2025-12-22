@@ -225,7 +225,14 @@ class LSPMixin:
     def _handle_tab_completion(self):
         """Handle tab key press for completion insertion. Returns True if handled."""
         if self._completions_overlay and self._current_completions:
-            completion = self._current_completions[0]
+            # Get the highlighted index from overlay, default to 0
+            highlighted_index = 0
+            if hasattr(self._completions_overlay, 'completions_list'):
+                highlighted = self._completions_overlay.completions_list.highlighted
+                if highlighted is not None:
+                    highlighted_index = highlighted
+
+            completion = self._current_completions[highlighted_index]
             label = completion.get("label", "")
             insert_text = completion.get("insertText", label)
 

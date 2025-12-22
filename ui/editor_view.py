@@ -12,7 +12,8 @@ from core.file_management import delete_file, read_file, save_file
 import asyncio
 from ui.save_as import SaveAsPopup
 from ui.code_editor import CodeEditor
-from commands.messages import EditorSavedAs, FilePathProvided, UseFile, EditorOpenFile, SaveAsProvided, EditorSaveFile, EditorDirtyFile
+from commands.messages import EditorSavedAs, FilePathProvided, UseFile, EditorOpenFile, SaveAsProvided, EditorSaveFile, EditorDirtyFile, FileChangedExternally
+from pathlib import Path
 from ui.open_file import OpenFilePopup
 from core.paths import LOG_FILE_STR
 logging.basicConfig(filename=LOG_FILE_STR, level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -24,6 +25,9 @@ class EditorView(Container):
         super().__init__(*args, **kwargs)
         self.file_path = file_path
         self.tab_id: str | None = None  # will be set by TabManager
+        self._file_watch_task: asyncio.Task | None = None
+        self._last_mtime: float = 0
+        self._file_watch_interval = 1.0  # Check every 1 second
 
     def random_hash(self):
         first = random.choice(string.ascii_lowercase)
@@ -52,18 +56,81 @@ class EditorView(Container):
                     os.makedirs(parent, exist_ok=True)
                 with open(self.file_path, "w") as f:
                     f.write("")
+            # Record initial modification time
+            self._last_mtime = self._get_file_mtime()
         self.code_area = CodeEditor.code_editor(tab_id=self.tab_id, file=self.file_path, classes="editor", id=self.newid)
         self.code_area.indent_type = "spaces"
         self.code_area.indent_width = 4
         self.code_area.show_line_numbers = True
         self.last_text = self.code_area.text
         self.mount(self.code_area)
+        # Start file watcher
+        if self.file_path:
+            self._start_file_watcher()
+
+    def _get_file_mtime(self) -> float:
+        """Get the modification time of the file."""
+        try:
+            return Path(self.file_path).stat().st_mtime
+        except (FileNotFoundError, OSError):
+            return 0
+
+    def _start_file_watcher(self):
+        """Start the file watcher task."""
+        if self._file_watch_task is None or self._file_watch_task.done():
+            self._file_watch_task = asyncio.create_task(self._watch_file_for_changes())
+
+    def _stop_file_watcher(self):
+        """Stop the file watcher task."""
+        if self._file_watch_task and not self._file_watch_task.done():
+            self._file_watch_task.cancel()
+            self._file_watch_task = None
+
+    async def _watch_file_for_changes(self):
+        """Watch the file for external changes."""
+        # Don't watch log files or other files that change frequently
+        skip_extensions = {'.log', '.tmp', '.swp', '.pyc'}
+        if self.file_path and Path(self.file_path).suffix.lower() in skip_extensions:
+            return
+
+        try:
+            while True:
+                await asyncio.sleep(self._file_watch_interval)
+                if not self.file_path:
+                    continue
+
+                current_mtime = self._get_file_mtime()
+                if current_mtime > self._last_mtime and self._last_mtime > 0:
+                    logging.debug(f"File changed externally: {self.file_path}")
+                    self._last_mtime = current_mtime
+                    self.post_message(FileChangedExternally(self.tab_id, self.file_path))
+        except asyncio.CancelledError:
+            pass
+        except Exception as e:
+            logging.error(f"Error in file watcher: {e}")
+
+    def update_mtime(self):
+        """Update the last modification time (call after saving)."""
+        self._last_mtime = self._get_file_mtime()
+
+    def reload_file(self):
+        """Reload the file content from disk."""
+        if self.file_path and os.path.exists(self.file_path):
+            content = read_file(self.file_path)
+            self.code_area.load_text_silent(content)
+            self._last_mtime = self._get_file_mtime()
+            logging.info(f"Reloaded file: {self.file_path}")
         
     async def on_text_area_changed(self, event: TextArea.Changed):
         # import here or top-level
         from commands.messages import EditorDirtyFile
         # include tab id when posting
         self.post_message(EditorDirtyFile(self.tab_id, self.file_path))
+
+    def on_editor_save_file(self, event: EditorSaveFile):
+        """Update mtime after saving to avoid false change detection."""
+        if event.tab_id == self.tab_id:
+            self.update_mtime()
 
     def on_editor_saved_as(self, event: EditorSavedAs):
         logging.info(event.contents)

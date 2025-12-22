@@ -37,6 +37,16 @@ class AIProvider(ABC):
         """Send a message and get a response."""
         pass
 
+    async def send_completion(self, prompt: str) -> str:
+        """Send a stateless completion request (no history, no tools).
+
+        Used for inline completions where we don't want to accumulate
+        conversation history or include tool definitions.
+        """
+        # Default implementation uses send_message, but providers should override
+        # to avoid history accumulation
+        return await self.send_message(prompt)
+
     def clear_history(self):
         """Clear conversation history."""
         self.messages = []
@@ -355,6 +365,26 @@ class OpenAIProvider(AIProvider):
 
         return "Max iterations reached"
 
+    async def send_completion(self, prompt: str) -> str:
+        """Send a stateless completion request for inline completions."""
+        if not self.client:
+            return ""
+
+        import asyncio
+
+        try:
+            response = await asyncio.to_thread(
+                lambda: self.client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=[{"role": "user", "content": prompt}],
+                    max_tokens=256
+                )
+            )
+            return response.choices[0].message.content or ""
+        except Exception as e:
+            logging.error(f"OpenAI completion error: {e}")
+            return ""
+
 
 class ClaudeProvider(AIProvider):
     """Anthropic Claude provider."""
@@ -520,6 +550,28 @@ class ClaudeProvider(AIProvider):
                 on_chunk(text)
             return stream.get_final_message()
 
+    async def send_completion(self, prompt: str) -> str:
+        """Send a stateless completion request for inline completions."""
+        if not self.client:
+            return ""
+
+        import asyncio
+
+        try:
+            response = await asyncio.to_thread(
+                lambda: self.client.messages.create(
+                    model="claude-sonnet-4-20250514",
+                    max_tokens=256,
+                    messages=[{"role": "user", "content": prompt}]
+                )
+            )
+            if response.content and hasattr(response.content[0], 'text'):
+                return response.content[0].text
+            return ""
+        except Exception as e:
+            logging.error(f"Claude completion error: {e}")
+            return ""
+
 
 # Registry of available providers
 PROVIDERS = {
@@ -582,6 +634,10 @@ class AIChat:
     async def send_message(self, user_message: str, on_chunk: Callable[[str], None] = None) -> str:
         """Send a message using the current provider."""
         return await self.provider.send_message(user_message, on_chunk)
+
+    async def send_completion(self, prompt: str) -> str:
+        """Send a stateless completion request (no history, no tools)."""
+        return await self.provider.send_completion(prompt)
 
     def clear_history(self):
         """Clear conversation history."""

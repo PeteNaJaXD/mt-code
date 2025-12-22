@@ -3,17 +3,23 @@ from typing import List
 
 
 def read_file(file_path: str) -> str:
-    """Read a file and return its lines.
+    """Read a file and return its contents.
 
     Args:
         file_path: Path to the file to read.
 
     Returns:
-        A list of lines from the file.
+        The file contents as a string, or a placeholder for binary files.
     """
-    with open(file_path, "r") as f:
-        content = f.readlines()
-    return "".join(content)
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            content = f.read()
+        return content
+    except UnicodeDecodeError:
+        # File is not valid UTF-8 (likely a binary file)
+        return "[Binary file - cannot be displayed as text]"
+    except Exception as e:
+        return f"[Error reading file: {e}]"
 
 
 def save_file(file_path: str, content: List[str]) -> None:

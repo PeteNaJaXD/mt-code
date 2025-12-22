@@ -274,6 +274,16 @@ def get_run_command(file_path: str) -> str | None:
 
     # Then check extension
     if extension in EXTENSION_TO_RUN_COMMAND:
-        return EXTENSION_TO_RUN_COMMAND[extension]
+        cmd = EXTENSION_TO_RUN_COMMAND[extension]
+
+        # For Python files, use configured interpreter
+        if extension in [".py", ".pyw"]:
+            from core.python_config import get_python_config
+            python_config = get_python_config()
+            working_dir = str(path.parent)
+            interpreter = python_config.get_effective_interpreter(working_dir)
+            cmd = f"{interpreter} {{file}}"
+
+        return cmd
 
     return None

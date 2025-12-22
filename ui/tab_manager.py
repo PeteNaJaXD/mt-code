@@ -18,7 +18,7 @@ from ui.tab_navigation import TabNavigationMixin
 from ui.run_button import RunButton
 from commands.messages import (
     WorkspaceRemoveTab, WorkspaceNextTab, UseFile,
-    EditorDirtyFile, EditorSaveFile, EditorUndo, EditorRedo
+    EditorDirtyFile, EditorSaveFile, EditorUndo, EditorRedo, FileChangedExternally
 )
 from git import Repo
 from git_utils import git_file_status
@@ -411,3 +411,18 @@ class TabManager(TabNavigationMixin, Container):
     def on_editor_redo(self, message: EditorRedo):
         """Handle redo request."""
         self.get_active_editor().redo()
+
+    def on_file_changed_externally(self, message: FileChangedExternally):
+        """Handle notification that a file was changed externally."""
+        logging.info(f"File changed externally: {message.file_path}")
+        editor = self.tabs.get(message.tab_id)
+        if editor:
+            # Auto-reload the file - the file watcher already updated mtime
+            editor.reload_file()
+            # Update the tab label to show it's been refreshed
+            try:
+                tab_widget: Tab = self.tab_bar.query_one(f"#t{message.tab_id}")
+                tab_widget.save_file()  # Remove dirty indicator if any
+            except Exception:
+                pass
+            logging.info(f"Auto-reloaded file: {message.file_path}")

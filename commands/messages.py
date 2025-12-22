@@ -146,3 +146,20 @@ class GotoFileLocation(Message):
         self.line = line
         self.column = column
 
+
+class PythonInterpreterSelected(Message):
+    """Message sent when a Python interpreter is selected."""
+
+    def __init__(self, interpreter_path: str):
+        super().__init__()
+        self.interpreter_path = interpreter_path
+
+
+class FileChangedExternally(Message):
+    """Message sent when an open file is modified externally."""
+
+    def __init__(self, tab_id: str, file_path: str):
+        super().__init__()
+        self.tab_id = tab_id
+        self.file_path = file_path
+
